@@ -20,7 +20,10 @@ class Game {
         this.level = new Level(this, 1000, 692);
 
         this.player = new Player(this.level, 50, 50, "");
+        this.enemy = new Enemy(this.level, 150, 150, "", this.entities);
+
         this.entities.push(this.player);
+        this.entities.push(this.enemy);
 
         this.starBackground = new StarBackground(400, this.level);
 
@@ -62,7 +65,12 @@ class Game {
 
     update(seconds) {
         this.starBackground.update(seconds);
-        this.player.update(seconds, this.keys);
+        this.player.update(seconds, this.keys, this.entities);
+
+        // start at 1 cuz player is first
+        for (var i = 1; i < this.entities.length; i++) {
+            this.entities[i].update(seconds, this.entities);
+        }
         this.camera.update();
     }
     

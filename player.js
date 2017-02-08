@@ -7,7 +7,7 @@ class Player extends Ship {
         super.draw(ctx);
     }
 
-    update(seconds, keys) {
-        super.update(seconds, keys.getKeys());
+    update(seconds, keys, entities) {
+        super.update(seconds, keys.getKeys(), entities);
     }
 };
