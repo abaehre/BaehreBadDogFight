@@ -1,16 +1,17 @@
 class Entity {
-    constructor(level, x, y, size, spriteSheet) {
+    constructor(level, x, y, size, imageArr) {
         // x and y coordinates
         this.x = x;
         this.y = y;
         // the size set here cuz why not
         this.size = size;
         // string to point to spritesheet file (should probably never be changed. may need to revisit)
-        this.spriteSheet = spriteSheet;
+        this.imageArr = imageArr;
         // whether we should remove the entity
         this.removed = false;
         this.level = level;
-        this.angle = 0;
+        // start looking right
+        this.angle = 0.0548;
     }
 
     getX() {
@@ -25,8 +26,8 @@ class Entity {
         return this.size;
     }
 
-    getSpriteSheet() {
-        return this.spriteSheet;
+    getImageArr() {
+        return this.imageArr;
     }
 
     setX(x) {

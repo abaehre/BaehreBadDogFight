@@ -15,12 +15,11 @@ class Game {
         this.fpsMeter = document.getElementById("fpsMeter");
 
         this.entities = [];
-        this.projectiles = [];
 
         this.level = new Level(this, 1000, 692);
 
-        this.player = new Player(this.level, 50, 50, "");
-        this.enemy = new Enemy(this.level, 150, 150, "", this.entities);
+        this.player = new Player(this.level, 50, 50, [new ShipImage()]);
+        this.enemy = new Enemy(this.level, 150, 150, [new ShipImage()], this.entities);
 
         this.entities.push(this.player);
         this.entities.push(this.enemy);
@@ -32,7 +31,6 @@ class Game {
         this.keys = new Keys();
         window.addEventListener("keydown", this.keyDown.bind(this), false);
         window.addEventListener("keyup", this.keyUp.bind(this), false);
-        // do it down here so dont want to set up anything else
         this.fpsTimer = Date.now();
         this.loop(0);
     }
@@ -65,6 +63,7 @@ class Game {
 
     update(seconds) {
         this.starBackground.update(seconds);
+
         this.player.update(seconds, this.keys, this.entities);
 
         // start at 1 cuz player is first
@@ -78,10 +77,8 @@ class Game {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.save();
         this.context.translate(Math.round(this.canvas.width / 2 - this.camera.getX()), Math.round(this.canvas.height / 2 - this.camera.getY()));
-
         this.camera.draw(this.entities, this.starBackground);
         this.context.restore();
-
     }
 };
 

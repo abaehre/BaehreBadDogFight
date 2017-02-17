@@ -1,8 +1,8 @@
 class Ship extends Entity {
-    constructor(level, x, y, spriteSheet) {
-        super(level, x, y, 48, spriteSheet);
-        this.forwardThrust = 6.0;
-        this.backwardThrust = 6.0;
+    constructor(level, x, y, imageArr) {
+        super(level, x, y, 48, imageArr);
+        this.forwardThrust = 4.0;
+        this.backwardThrust = 4.0;
         this.turnLeftSpeed = 0.0002;
         this.turnRightSpeed = 0.0002;
         this.velX = 0;
@@ -38,7 +38,7 @@ class Ship extends Entity {
             this.turnRight();
         }
         this.fixUnitCollision(seconds, entities);
-        this.fixWorldCollision();
+        this.fixWorldCollision(seconds);
         // can apply friction here by multiplying by .9 or smaller
         this.velX *= 0.95;
         this.velY *= 0.95;
@@ -56,14 +56,14 @@ class Ship extends Entity {
     }
 
     draw(ctx) {
-        ctx.fillStyle = "red";
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle * (180 / Math.PI));
-        ctx.fillRect((-this.size / 2), (-this.size / 2), 48, 48);
+        //ctx.fillRect((-this.size / 2), (-this.size / 2), 48, 48);
+        for (var i = 0; i < this.imageArr.length; i++) {
+            this.imageArr[i].draw(ctx, this.x, this.y);
+        }
         ctx.rotate(-this.angle * (180 / Math.PI));
         ctx.translate(-this.x, -this.y);
-        ctx.fillStyle = "blue"
-        ctx.fillRect(this.x - 2.5, this.y - 2.5, 5, 5);
     }
 
     getCorners() {
@@ -86,19 +86,27 @@ class Ship extends Entity {
     }
 
     // tinker with number there if you want
-    fixWorldCollision() {
+    fixWorldCollision(seconds) {
         var corners = this.getCorners();
         for (var i = 0; i < corners.length; i++) {
             var corner = corners[i];
-            if (corner.x <= 0) {
-                this.x += this.diagonal / 16.0;
-            } else if (corner.x >= this.level.getWidth()) {
-                this.x += (corner.x - (this.level.getWidth() + this.diagonal)) / 16.0;
-            }
-            if (corner.y <= 0) {
-                this.y += this.diagonal / 16.0;
-            } else if (corner.y >= this.level.getHeight()) {
-                this.y += (corner.y - (this.level.getHeight() + this.diagonal)) / 16.0;
+            if (corner.x <= 0 || corner.x >= this.level.getWidth() || corner.y <= 0 || corner.y >= this.level.getHeight()) {
+                if (Math.abs(this.velX) < 2.0 && Math.abs(this.velY) < 2.0) {
+                    var buffer = 20;
+                    if (this.x < this.diagonal) {
+                        this.x += (this.diagonal + buffer) * seconds;
+                    } else if (this.x > this.level.getWidth() - this.diagonal) {
+                        this.x -= (this.diagonal + buffer) * seconds;
+                    }
+                    if (this.y < this.diagonal) {
+                        this.y += (this.diagonal + buffer) * seconds;
+                    } else if (this.y > this.level.getHeight() - this.diagonal) {
+                        this.y -= (this.diagonal + buffer) * seconds;
+                    }
+                }
+                this.velX *= -1;
+                this.velY *= -1;
+                return;
             }
         }
     }
@@ -160,10 +168,16 @@ class Ship extends Entity {
                 if (this.checkUnitCollision(this, entity)) {
                     var velocityX = (this.x - entity.getX());
                     var velocityY = (this.y - entity.getY());
-                    velocityX *= -1;
-                    velocityY *= -1;
-                    this.x -= velocityX * seconds;
-                    this.y -= velocityY * seconds;
+                    velocityX *= -1 * seconds;
+                    velocityY *= -1 * seconds;
+                    // adjusting numbers here by a buffer
+                    var buffer = 24;
+                    if (!(this.x - velocityX < buffer) && !(this.x - velocityX > this.level.getWidth() - buffer)) {
+                        this.x -= velocityX;
+                    }
+                    if (!(this.y - velocityY < buffer) && !(this.y - velocityY > this.level.getHeight() - buffer)) {
+                        this.y -= velocityY;
+                    }
                 }
             }
         }

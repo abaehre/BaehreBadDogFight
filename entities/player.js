@@ -1,6 +1,6 @@
 class Player extends Ship {
-    constructor(level, x, y, spriteSheet) {
-        super(level, x, y, spriteSheet);
+    constructor(level, x, y, imageArr) {
+        super(level, x, y, imageArr);
     }
 
     draw(ctx) {

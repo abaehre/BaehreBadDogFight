@@ -1,6 +1,6 @@
 class Enemy extends Ship {
-    constructor(level, x, y, spriteSheet, entities) {
-        super(level, x, y, spriteSheet);
+    constructor(level, x, y, imageArr, entities) {
+        super(level, x, y, imageArr);
         this.closest = null;
         this.facingClosest = false;
         this.entities = entities;
@@ -52,8 +52,7 @@ class Enemy extends Ship {
     trackClosest() {
         this.facingClosest = false;
         // get the angle 
-        var tempAngle = Math.atan2(this.closest.getY() - this.y, this.closest.getX() - this.x) * (Math.PI / 180);
-        
+        var tempAngle = Math.atan2(this.y - this.closest.getY(), this.x - this.closest.getX()) * (Math.PI / 180);
         // this seems to work however isn't my favorite for efficiency
         var difference = tempAngle - this.angle;
         
@@ -77,9 +76,8 @@ class Enemy extends Ship {
         var smallXCheck = Math.abs(this.x - this.closest.getX()) > 1;
         if ((this.x !== this.closest.getX() && smallXCheck) || (this.y !== this.closest.getY() && smallYCheck)) {
             if (this.facingClosest) {
-                this.pressed.down = true;
-            }
-            else if (Math.random() < 0.4) {
+                this.pressed.up = true;
+            } else if (Math.random() < 0.4) {
                 this.pressed.down = true;
             }
         }
