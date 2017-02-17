@@ -6,6 +6,6 @@ class ShipImage extends ParentImage {
 
     draw(ctx, x, y) {
         // no need to adjust where to draw here. just straight up draw
-        ctx.drawImage(this.image, -24, -24, 48 , 48);
+        ctx.drawImage(this.image, -24, -24, 48, 48);
     }
 };

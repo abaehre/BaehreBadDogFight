@@ -58,12 +58,12 @@ class Ship extends Entity {
     draw(ctx) {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle * (180 / Math.PI));
-        //ctx.fillRect((-this.size / 2), (-this.size / 2), 48, 48);
         for (var i = 0; i < this.imageArr.length; i++) {
             this.imageArr[i].draw(ctx, this.x, this.y);
         }
         ctx.rotate(-this.angle * (180 / Math.PI));
         ctx.translate(-this.x, -this.y);
+
     }
 
     getCorners() {
