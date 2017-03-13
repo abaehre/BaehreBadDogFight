@@ -13,7 +13,11 @@ class Level {
         return this.height;
     }
 
-    /*addProjectile(x, y, dir) {
-        this.game.addProjectile(x, y, dir);
-    }*/
+    addEmitter(x, y, amount, life, color) {
+        this.game.addEmitter(x, y, amount, life, color);
+    }
+    
+    addProjectile(entity, x, y, angle) {
+        this.game.addProjectile(entity, x, y, angle);
+    }
 };

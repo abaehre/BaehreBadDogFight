@@ -12,7 +12,7 @@ class Camera {
         this.y = this.entity.getY() || (this.level.getHeight() / 2);
     }
 
-    draw(entities, background) {
+    draw(entities, emitters, background) {
         //draw the background stars
         var stars = background.getStars();
         for (var j = 0; j < stars.length; j++) {
@@ -26,6 +26,16 @@ class Camera {
             // buffer of 24 so that a circle with radius of 24 will still be shown
             if (this.inView(entities[i].getX(), entities[i].getY(), 24)) {
                 entities[i].draw(this.context);
+            }
+        }
+
+        for (var k = 0; k < emitters.length; k++) {
+            if (emitters[k].getToRemove()) {
+                emitters.splice(k, 1);
+                continue;
+            }
+            if (this.inView(emitters[k].getX(), emitters[k].getY(), 3)) {
+                emitters[k].draw(this.context);
             }
         }
     }
