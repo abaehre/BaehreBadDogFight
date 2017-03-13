@@ -8,18 +8,20 @@ class Game {
         this.seconds = 0;
         // for standardizing update time
         this.step = 1/60;
-        // frames per second we are runnign at for debug purposes
+        // frames per second we are running at for debug purposes
         this.fps = 0;
         // for calculating fps
         this.frames = 0;
         this.fpsMeter = document.getElementById("fpsMeter");
 
         this.entities = [];
+        this.emitters = [];
 
         this.level = new Level(this, 1000, 692);
 
-        this.player = new Player(this.level, 50, 50, [new ShipImage()]);
-        this.enemy = new Enemy(this.level, 150, 150, [new ShipImage()], this.entities);
+        this.player = new Player(this.level, 250, 50, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0)]);
+        //this.enemy = new Enemy(this.level, 150, 150, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0), new GunImage(24, 0, 0.0548)], this.entities);
+        this.enemy = new Enemy(this.level, 150, 150, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(0, 24, 0.0274), new GunImage(-24, 0, 0)], this.entities);
 
         this.entities.push(this.player);
         this.entities.push(this.enemy);
@@ -64,11 +66,25 @@ class Game {
     update(seconds) {
         this.starBackground.update(seconds);
 
-        this.player.update(seconds, this.keys, this.entities);
+        for (var i = 0; i < this.entities.length; i++) {
+            var entity = this.entities[i];
+            if (entity.getRemoved()) {
+                if (entity.isPlayer()) {
+                    entity.setX(50);
+                    entity.setY(50);
+                    entity.setHealth(100);
+                    entity.setAngle(0);
+                    entity.unremove();
+                } else {
+                    this.entities.splice(i, 1);
+                }
+            } else {
+                entity.update(seconds, this.entities, this.keys);
+            }
+        }
 
-        // start at 1 cuz player is first
-        for (var i = 1; i < this.entities.length; i++) {
-            this.entities[i].update(seconds, this.entities);
+        for (var j = 0; j < this.emitters.length; j++) {
+            this.emitters[j].update(seconds);
         }
         this.camera.update();
     }
@@ -77,8 +93,16 @@ class Game {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.save();
         this.context.translate(Math.round(this.canvas.width / 2 - this.camera.getX()), Math.round(this.canvas.height / 2 - this.camera.getY()));
-        this.camera.draw(this.entities, this.starBackground);
+        this.camera.draw(this.entities, this.emitters, this.starBackground);
         this.context.restore();
+    }
+
+    addEmitter(x, y, amount, life, color) {
+        this.emitters.push(new Emitter(this.level, x, y, amount, life, color));
+    }
+
+    addProjectile(entity, x, y, angle) {
+        this.entities.push(new Projectile(entity, this.level, x, y, angle));
     }
 };
 

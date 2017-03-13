@@ -1,17 +1,15 @@
 class Entity {
-    constructor(level, x, y, size, imageArr) {
+    constructor(level, x, y, size, angle) {
         // x and y coordinates
         this.x = x;
         this.y = y;
         // the size set here cuz why not
         this.size = size;
-        // string to point to spritesheet file (should probably never be changed. may need to revisit)
-        this.imageArr = imageArr;
         // whether we should remove the entity
         this.removed = false;
         this.level = level;
         // start looking right
-        this.angle = 0.0548;
+        this.angle = angle || 0.0;
     }
 
     getX() {
@@ -26,8 +24,8 @@ class Entity {
         return this.size;
     }
 
-    getImageArr() {
-        return this.imageArr;
+    setSize(newSize) {
+        this.size = newSize;
     }
 
     setX(x) {
@@ -38,14 +36,6 @@ class Entity {
         this.y = y;
     }
 
-    setWidth(width) {
-        this.width = width;
-    }
-
-    setHeight(height) {
-        this.height = height;
-    }
-
     remove() {
         this.removed = true;
     }
@@ -54,7 +44,20 @@ class Entity {
         return this.removed;
     }
 
+    unremove() {
+        this.removed = false;
+    }
+
     getAngle() {
         return this.angle;
+    }
+
+    setAngle(newAngle) {
+        this.angle = newAngle;
+    }
+
+    /* overridden for player */
+    isPlayer() {
+        return false;
     }
 };

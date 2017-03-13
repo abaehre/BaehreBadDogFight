@@ -6,6 +6,9 @@ class ParentImage {
         this.image = new Image();
         this.image.src = spriteSheet;
         this.frame = 0;
+        this.animating = false;
+        this.hit = false;
+        this.hitFrame = 0;
     }
 
     getFrame() {
@@ -21,6 +24,34 @@ class ParentImage {
     }
 
     setImage(newImage) {
-        this.image = newImage;
+        this.image.src = newImage;
+    }
+
+    getAnimating() {
+        return this.animating;
+    }
+
+    animate() {
+        this.animating = true;
+    }
+
+    stopAnimate() {
+        this.animating = false;
+    }
+
+    getType() {
+        return "image";
+    }
+
+    getAngle() {
+        return this.angle;
+    }
+
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.y;
     }
 };
