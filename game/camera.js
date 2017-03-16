@@ -40,7 +40,7 @@ class Camera {
         }
     }
 
-    update() {
+    update(seconds) {
         //defaults
         this.x = this.entity.getX();
         this.y = this.entity.getY();
@@ -58,6 +58,8 @@ class Camera {
         if (this.y + (this.height / 2) >= this.level.getHeight()) {
             this.y = this.level.getHeight() - (this.height / 2);
         }
+        // implement screen shake
+
     }
 
     setLevel(level) {
