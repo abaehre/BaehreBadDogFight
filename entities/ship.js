@@ -352,7 +352,9 @@ class Ship extends Entity {
                         entity.remove();
                         this.level.addEmitter(entity.getX(), entity.getY(), 5, 20, '#7171c6');
                         this.setHealth(this.getHealth() - entity.getDamage());
-
+                        if (this.isPlayer()) {
+                            this.level.screenShake();
+                        }
                         // set the image to hitImage
                         for (var j = 0; j < this.imageArr.length; j++) {
 

@@ -74,6 +74,8 @@ class Game {
                     entity.setY(50);
                     entity.setHealth(100);
                     entity.setAngle(0);
+                    entity.velX = 0;
+                    entity.velY = 0;
                     // there has got to be a better name for this
                     entity.unremove();
                 } else {

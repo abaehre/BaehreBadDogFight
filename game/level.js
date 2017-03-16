@@ -20,4 +20,12 @@ class Level {
     addProjectile(entity, x, y, angle) {
         this.game.addProjectile(entity, x, y, angle);
     }
+
+    screenShake() {
+        if (!this.game.camera.getScreenShake()) {
+            this.game.camera.setScreenShake(true);
+        } else {
+            this.game.camera.setScreenShakeFrame(0);
+        }
+    }
 };
