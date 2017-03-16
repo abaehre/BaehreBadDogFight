@@ -10,6 +10,9 @@ class Camera {
         this.scale = (this.width + this.height) / 1200;
         this.x = this.entity.getX() || (this.level.getWidth() / 2);
         this.y = this.entity.getY() || (this.level.getHeight() / 2);
+        this.screenShake = false;
+        this.screenShakeFrame = 0;
+        this.screenShakeRadius = 10;
     }
 
     draw(entities, emitters, background) {
@@ -40,7 +43,7 @@ class Camera {
         }
     }
 
-    update() {
+    update(seconds) {
         //defaults
         this.x = this.entity.getX();
         this.y = this.entity.getY();
@@ -57,6 +60,21 @@ class Camera {
         }
         if (this.y + (this.height / 2) >= this.level.getHeight()) {
             this.y = this.level.getHeight() - (this.height / 2);
+        }
+        // implement screen shake
+        if (this.screenShake) {
+            var angle = Math.random() * Math.PI * 2;
+            var offsetX = Math.cos(angle) * this.screenShakeRadius;
+            var offsetY = Math.sin(angle) * this.screenShakeRadius;
+            this.x += offsetX;
+            this.y += offsetY;
+            this.screenShakeFrame += 1;
+            this.screenShakeRadius *= .9; 
+            if (this.screenShakeFrame > 10) {
+                this.screenShake = false;
+                this.screenShakeFrame = 0;
+                this.screenShakeRadius = 10;
+            }
         }
     }
 
@@ -82,5 +100,21 @@ class Camera {
 
     getY() {
         return this.y;
+    }
+
+    getScreenShake() {
+        return this.screenShake;
+    }
+
+    setScreenShake(newScreenShake) {
+        this.screenShake = newScreenShake;
+    }
+
+    getScreenShakeFrame() {
+        return this.screenShakeFrame;
+    }
+
+    setScreenShakeFrame(newScreenShakeFrame) {
+        this.screenShakeFrame = newScreenShakeFrame;
     }
 }

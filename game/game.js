@@ -74,6 +74,9 @@ class Game {
                     entity.setY(50);
                     entity.setHealth(100);
                     entity.setAngle(0);
+                    entity.velX = 0;
+                    entity.velY = 0;
+                    // there has got to be a better name for this
                     entity.unremove();
                 } else {
                     this.entities.splice(i, 1);
@@ -86,7 +89,7 @@ class Game {
         for (var j = 0; j < this.emitters.length; j++) {
             this.emitters[j].update(seconds);
         }
-        this.camera.update();
+        this.camera.update(seconds);
     }
     
     draw(seconds) {
