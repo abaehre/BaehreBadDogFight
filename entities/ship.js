@@ -18,6 +18,10 @@ class Ship extends Entity {
         this.currentHealth = this.fullHealth;
         // the diagonal length from center to corner. basic geometry (sqrt 2 and what not)
         this.diagonal = (this.size / 2) * 1.41421356237;
+        this.hitCounter = 0;
+        this.clip = 10;
+        this.reloadCounter = 120;
+        this.reloading = false;
     }
 
     getType() {
@@ -98,11 +102,39 @@ class Ship extends Entity {
                 this.turnRightSpeed = 0.0;
             }
         }
+        if (this.clip === 0 || (pressed.reload && this.clip !== 10) || this.reloading) {
+            if (this.reloading === false) {
+                for (var i = 0; i < this.imageArr.length; i++) {
+                    var image = this.imageArr[i];
+                    if (image.getType() === "gunImage") {
+                        image.reloading = true;
+                        image.keepAnimating();
+                        image.animate();
+                    }
+                }
+                this.reloading = true;
+            }
+            if (this.reloadCounter === 0) {
+                this.reloadCounter = 120;
+                this.clip = 10;
+                this.reloading = false;
+                for (var i = 0; i < this.imageArr.length; i++) {
+                    var image = this.imageArr[i];
+                    if (image.getType() === "gunImage") {
+                        image.reloading = false;
+                        image.setImage("SpriteSheets/gun/gunImage.png");
+                        image.stopAnimate();
+                    }
+                }
+            }
+            this.reloadCounter -= 1;
+        }
 
-        if (pressed.shoot) {
+        if (pressed.shoot && !this.reloading) {
             for (var i = 0; i < this.imageArr.length; i++) {
                 var image = this.imageArr[i];
                 if (image.getType() === "gunImage" && !image.getAnimating()) {
+                    this.clip -= 1;
                     image.animate();
                     var projX = (image.getX()) * Math.cos(this.angle * (180 / Math.PI)) - (image.getY()) * Math.sin(this.angle * (180 / Math.PI)) + this.x;
                     var projY = (image.getY()) * Math.cos(this.angle * (180 / Math.PI)) + (image.getX()) * Math.sin(this.angle * (180 / Math.PI)) + this.y;
@@ -115,10 +147,10 @@ class Ship extends Entity {
             if (image.getType() === "rocketImage") {
                 var imageAngle = image.getAngle();
                 // basically if the angle fits with the velocity go ahead and animate
-                if (imageAngle > 0.0 && imageAngle < 0.0548 && pressed.left ||
-                imageAngle > 0.0548 && imageAngle < 0.1096 && pressed.right || 
-                (imageAngle >= 0.0822 || imageAngle <= 0.0274) && pressed.up ||
-                (imageAngle >= 0.0274 && imageAngle <= 0.0822) && pressed.down) {
+                if (imageAngle >= 0.0 && imageAngle <= 0.0548 && pressed.left ||
+                imageAngle >= 0.0548 && imageAngle <= 0.1096 && pressed.right || 
+                (imageAngle > 0.0822 || imageAngle < 0.0274) && pressed.up ||
+                (imageAngle > 0.0274 && imageAngle < 0.0822) && pressed.down) {
                     image.animate();
                 } else {
                     image.stopAnimate();
@@ -163,7 +195,8 @@ class Ship extends Entity {
     }
 
     addHealthBars(ctx) {
-        if (this.currentHealth < this.fullHealth) {
+        if (this.currentHealth < this.fullHealth && (this.hitCounter > 0 || this.isPlayer())) {
+            this.hitCounter -= 1;
             var percent = this.currentHealth / this.fullHealth;
             // ratio in relation to the size of the character
             var pixelWidth = percent * this.size;
@@ -171,8 +204,14 @@ class Ship extends Entity {
             var pixelHeight = 10;
             // top side then the height and a padding of 4
             var healthY = this.y - this.diagonal - pixelHeight - 4;
+            if (healthY < 0) {
+                healthY = 1;
+            }
             // just the left side of the sprite
             var healthX = this.x - this.diagonal;
+            if (healthX < 0) {
+                healthX = 1;
+            }
             if (percent < 0.25) {
                 ctx.fillStyle = '#ff0000';
             } else if (percent < 0.75) {
@@ -352,12 +391,14 @@ class Ship extends Entity {
                         entity.remove();
                         this.level.addEmitter(entity.getX(), entity.getY(), 5, 20, '#7171c6');
                         this.setHealth(this.getHealth() - entity.getDamage());
+                        // set the hitcounter to show health bars
                         if (this.isPlayer()) {
                             this.level.screenShake();
+                        } else {
+                            this.hitCounter = 60;
                         }
                         // set the image to hitImage
                         for (var j = 0; j < this.imageArr.length; j++) {
-
                             // add hit frames and reset hitFrame incase hit multiple times in quick succession
                             this.imageArr[j].hit = true;
                             this.imageArr[j].hitFrame = 0;
