@@ -2,10 +2,13 @@ class GunImage extends ParentImage {
     constructor(x, y, angle) {
         super(x, y, angle, "SpriteSheets/gun/gunImage.png");
         this.frames = [{x:0,y:0},{x:0,y:32},{x:0,y:64},{x:0,y:96}];
+        this.reloading = false;
     }
 
     draw(ctx, x, y) {
-        if (this.hit) {
+        if (this.reloading) {
+            this.setImage("SpriteSheets/gun/gunImageReload.png");
+        } else if (this.hit) {
             if (this.hitFrame === 0) {
                 this.setImage("SpriteSheets/gun/gunImageHit.png");
             }
@@ -21,7 +24,9 @@ class GunImage extends ParentImage {
             start = this.frames[Math.floor(this.frame / 10) % this.frames.length];
             this.frame += 1;
             if (Math.floor(this.frame / 12) >= this.frames.length) {
-                this.animating = false;
+                if (!this.fullAnimating) {
+                    this.animating = false;
+                }
                 this.frame = 0;
             }
         } else {

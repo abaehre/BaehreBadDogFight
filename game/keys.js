@@ -8,6 +8,7 @@ class Keys {
 		this.right = false;
 		this.down = false;
 		this.shoot = false;
+		this.reload = false;
 	}
 
 	onKeyDown(e) {
@@ -41,6 +42,9 @@ class Keys {
 				break;
 			case 32: //spacebar
 				that.shoot = true;
+				break;
+			case 82: // r
+				that.reload = true;
 				break;
 		};
 	}
@@ -76,10 +80,13 @@ class Keys {
 			case 32: //spacebar
 				that.shoot = false;
 				break;
+			case 82: //r
+				that.reload = false;
+				break;
 		};
 	}
 
 	getKeys() {
-		return {"up": this.up, "down": this.down, "left": this.left, "right": this.right, "shoot": this.shoot};
+		return {"up": this.up, "down": this.down, "left": this.left, "right": this.right, "shoot": this.shoot, "reload": this.reload};
 	}
 };

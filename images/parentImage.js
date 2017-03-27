@@ -7,6 +7,7 @@ class ParentImage {
         this.image.src = spriteSheet;
         this.frame = 0;
         this.animating = false;
+        this.fullAnimating = false;
         this.hit = false;
         this.hitFrame = 0;
     }
@@ -35,8 +36,13 @@ class ParentImage {
         this.animating = true;
     }
 
+    keepAnimating() {
+        this.fullAnimating = true;
+    }
+
     stopAnimate() {
         this.animating = false;
+        this.fullAnimating = false;
     }
 
     getType() {
