@@ -8,7 +8,6 @@ class Entity {
         // whether we should remove the entity
         this.removed = false;
         this.level = level;
-        // start looking right
         this.angle = angle || 0.0;
     }
 

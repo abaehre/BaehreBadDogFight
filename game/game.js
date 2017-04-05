@@ -19,7 +19,7 @@ class Game {
 
         this.level = new Level(this, 1000, 692);
 
-        this.player = new Player(this.level, 250, 50, [new ShipImage(), new RocketImage(24, 0, 0.0274), new GunImage(-24, 0, 0)]);
+        this.player = new Player(this.level, 250, 50, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0)]);
         this.enemy = new Enemy(this.level, 150, 150, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0), new GunImage(24, 0, 0.0548)], this.entities);
 
         this.entities.push(this.player);

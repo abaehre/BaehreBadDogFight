@@ -1,6 +1,6 @@
 class Ship extends Entity {
     constructor(level, x, y, imageArr) {
-        super(level, x, y, 48, 0.0174);
+        super(level, x, y, 48, 0);
         this.imageArr = imageArr;
         this.thrustIncrement = 0.1;
         this.maxForwardThrust = 4.0;
