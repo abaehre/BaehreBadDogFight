@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+ index.html
+
+ Author: Andrew Baehre
+ Version: 1
+-->
+
+<html>
+  <style>
+    .no-touch {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none;   /* Chrome/Safari/Opera */
+        -khtml-user-select: none;    /* Konqueror */
+        -moz-user-select: none;      /* Firefox */
+        -ms-user-select: none;       /* Internet Explorer/Edge */
+        user-select: none;
+    }
+    .side {
+        display:inline-block;
+        vertical-align: top;
+        border: 2px solid #111111;
+    }
+    .dimensions {
+        height: 500px;
+        width: 90px;
+        background-color: #dddddd;
+    }
+    .rocket, .gun{
+        border-bottom: 2px solid #111111;
+        height: 64px;
+    }
+    .images {
+        padding-top: 24px;
+        padding-left: 42px;
+    }
+    .selected {
+        border: 2px solid red;
+    }
+    canvas {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        background: #111;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background-color: #dddddd;
+        border-bottom: 2px solid #111111;
+        text-align: center;
+        color: #111111;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+    }
+    .trashcan {
+        margin-left: 13px;
+        position: absolute;
+        bottom: 0;
+        background-color: #dddddd;
+    }
+    .buttonDiv {
+        background-color: #dddddd;
+        border-top: 2px solid #111111;
+        font-size: 18px;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #111111;
+        height: 32px;
+    }
+    input {
+        display: inline;
+    }
+    .testButton {
+        float: right;
+        margin-right: 6px;
+        font-size: 18px;
+        color: #111111;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .hidden {
+        display: none;
+    }
+    .testCanvas {
+        z-index: 100;
+        position: absolute;
+        top: 8px;
+        left: 8px;
+    }
+    form {
+        margin-top: 6px;
+        margin-left: 6px;
+        font-size: 18px;
+        color: #111111;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+  </style>
+  <body>
+    <div class="side no-touch">
+        <canvas id="guiCanvas"></canvas>
+        <canvas id="gameCanvas" class="hidden testCanvas"></canvas>
+        <div id="buttonDiv" class="buttonDiv">
+            <form id="guiForm">
+                <input id="moveRadio" name="blah" type="radio" id="move" checked>
+                <label for="move">Move</label>
+                <input id="rotateRadio" name="blah" type="radio" id="rotate">
+                <label for="rotate">Rotate</label>
+                <input id="testButton" class="testButton" type="button" 
+                    value="Test It!" /> 
+            </form>
+            <form id="gameForm" class="hidden">
+                <input id="backButton" class="testButton" type="button" 
+                    value="Back" />
+            </form>
+        </div>
+    </div>
+    <div class="side dimensions no-touch" style="position: relative;">
+        <ul id="shipParts">
+        </ul>
+        <button id="trashcan" class="trashcan no-touch"><img style="padding-top: 5px;" src="gui/trashcan.png"/></button>
+    </div>
+    <script src="game/keys.js"></script>
+    <script src="stars/star.js"></script>
+    <script src="stars/starBackground.js"></script>
+    <script src="images/parentImage.js"></script>
+    <script src="images/gunImage.js"></script>
+    <script src="images/rocketImage.js"></script>
+    <script src="images/shipImage.js"></script>
+    <script src="game/emitter.js"></script>
+    <script src="game/particle.js"></script>
+    <script src="game/level.js"></script>
+    <script src="game/camera.js"></script>
+    <script src="entities/entity.js"></script>
+    <script src="entities/projectile.js"></script>
+    <script src="entities/ship.js"></script>
+    <script src="entities/enemy.js"></script>
+    <script src="entities/player.js"></script>
+    <script src="game/game.js"></script>
+    <script src="gui/gui.js"></script>
+  </body>
+</html>
