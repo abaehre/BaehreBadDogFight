@@ -2,16 +2,21 @@ class Ship extends Entity {
     constructor(level, x, y, imageArr) {
         super(level, x, y, 48, 0);
         this.imageArr = imageArr;
-        this.thrustIncrement = 0.1;
-        this.maxForwardThrust = 4.0;
+        // defaults for movement.
+        this.thrustForwardIncrement = 0.3;
+        this.thrustBackwardIncrement = 0.3;
+        this.maxForwardThrust = 0.03;
         this.forwardThrust = 0.0;
-        this.maxBackwardThrust = 4.0;
+        this.maxBackwardThrust = 0.03;
         this.backwardThrust = 0.0;
-        this.turnIncrement = 0.00001;
+        this.turnLeftIncrement = 0.0002;
+        this.turnRightIncrement = 0.0002;
         this.maxTurnLeftSpeed = 0.0003;
         this.turnLeftSpeed = 0.0;
         this.maxTurnRightSpeed = 0.0003;
         this.turnRightSpeed = 0.0;
+
+        //this.analyzeShips(this.imageArr);
         this.velX = 0;
         this.velY = 0;
         this.fullHealth = 100;
@@ -20,8 +25,30 @@ class Ship extends Entity {
         this.diagonal = (this.size / 2) * 1.41421356237;
         this.hitCounter = 0;
         this.clip = 10;
-        this.reloadCounter = 120;
+        this.reloadCounter = 2.0;
         this.reloading = false;
+    }
+
+    analyzeShips(arr) {
+        for (var i = 0; i < arr; i++) {
+            var image = arr[i];
+            if (image.getType() === "rocketImage") {
+                /* if (imageAngle >= 0.0 && imageAngle <= 0.0548 && pressed.left ||
+                imageAngle >= 0.0548 && imageAngle <= 0.1096 && pressed.right || 
+                (imageAngle > 0.0822 || imageAngle < 0.0274) && pressed.up ||
+                (imageAngle > 0.0274 && imageAngle < 0.0822) && pressed.down) { */
+                var imageAngle = image.getAngle();
+                if (imageAngle > 0.0 && imageAngle < 0.0548) {
+                    this.turnLeftIncrement += 0.000001;
+                } else if (imageAngle > 0.0548 && imageAngle < 0.1096) {
+                    this.turnRightIncrement += 0.000001;
+                } else if (imageAngle >= 0.0822 || imageAngle <= 0.0274) {
+                    this.thrustForwardIncrement += 0.01;
+                } else if (imageAngle >= 0.0274 && imageAngle <= 0.0822) {
+                    this.thrustBackwardIncrement += 0.01;
+                }
+            }
+        }
     }
 
     getType() {
@@ -31,6 +58,10 @@ class Ship extends Entity {
     getImageArr() {
         return this.imageArr;
     }
+    
+    setImageArr(newImageArr) {
+        this.imageArr = newImageArr;
+    }
 
     getHealth() {
         return this.currentHealth;
@@ -39,7 +70,7 @@ class Ship extends Entity {
     setHealth(newHealth) {
         this.currentHealth = newHealth;
     }
-
+    // need to think about what actually gets multiplied by the seconds
     update(seconds, pressed, entities) {
         if (this.currentHealth <= 0) {
             this.remove();
@@ -51,13 +82,13 @@ class Ship extends Entity {
         var radians = this.angle * (180 / Math.PI);
         if (pressed.up) {
             if (this.forwardThrust < this.maxForwardThrust) {
-                this.forwardThrust += this.thrustIncrement;
+                this.forwardThrust += this.thrustForwardIncrement * seconds;
             }
             this.velX += Math.cos(radians) * this.forwardThrust;
             this.velY += Math.sin(radians) * this.forwardThrust;
         } else {
             if (this.forwardThrust > 0.0) {
-                this.forwardThrust -= this.thrustIncrement;
+                this.forwardThrust *= 0.97;
             } else {
                 this.forwardThrust = 0.0;
             }
@@ -65,13 +96,13 @@ class Ship extends Entity {
 
         if (pressed.down) {
             if (this.backwardThrust < this.maxBackwardThrust) {
-                this.backwardThrust += this.thrustIncrement;
+                this.backwardThrust += this.thrustBackwardIncrement * seconds;
             }
             this.velX += Math.cos(radians) * this.backwardThrust * -1;
             this.velY += Math.sin(radians) * this.backwardThrust * -1;
         } else {
             if (this.backwardThrust > 0.0) {
-                this.backwardThrust -= this.thrustIncrement;
+                this.backwardThrust *= 0.97;
             } else {
                 this.backwardThrust = 0.0;
             }
@@ -79,12 +110,11 @@ class Ship extends Entity {
 
         if (pressed.left) {
             if (this.turnLeftSpeed < this.maxTurnLeftSpeed) {
-                this.turnLeftSpeed += this.turnIncrement;
+                this.turnLeftSpeed += this.turnLeftIncrement * seconds;
             }
-            this.turnLeft();
         } else {
             if (this.turnLeftSpeed > 0.0) {
-                this.turnLeftSpeed -= this.turnIncrement;
+                this.turnLeftSpeed *= 0.965;
             } else {
                 this.turnLeftSpeed = 0.0;
             }
@@ -92,12 +122,11 @@ class Ship extends Entity {
 
         if (pressed.right) {
             if (this.turnRightSpeed < this.maxTurnRightSpeed) {
-                this.turnRightSpeed += this.turnIncrement;
+                this.turnRightSpeed += this.turnRightIncrement * seconds;
             }
-            this.turnRight();
         } else {
             if (this.turnRightSpeed > 0.0) {
-                this.turnRightSpeed -= this.turnIncrement;
+                this.turnRightSpeed *= 0.965;
             } else {
                 this.turnRightSpeed = 0.0;
             }
@@ -114,8 +143,8 @@ class Ship extends Entity {
                 }
                 this.reloading = true;
             }
-            if (this.reloadCounter === 0) {
-                this.reloadCounter = 120;
+            if (this.reloadCounter <= 0) {
+                this.reloadCounter = 2.0;
                 this.clip = 10;
                 this.reloading = false;
                 for (var i = 0; i < this.imageArr.length; i++) {
@@ -127,7 +156,7 @@ class Ship extends Entity {
                     }
                 }
             }
-            this.reloadCounter -= 1;
+            this.reloadCounter -= 1 * seconds;
         }
 
         if (pressed.shoot && !this.reloading) {
@@ -160,18 +189,19 @@ class Ship extends Entity {
         var corners = this.getCorners();
         this.fixEntityCollision(seconds, entities, corners);
         this.fixWorldCollision(seconds, corners);
-        // can apply friction here by multiplying by .9 or smaller
+        // can apply friction here by multiplying by .9 or larger
         this.velX *= 0.97;
         this.velY *= 0.97;
-        if (Math.abs(this.velX) < 0.1) {
+        if (Math.abs(this.velX) < 0.005) {
             this.velX = 0.0;
         }
-        if (Math.abs(this.velY) < 0.1) {
+        if (Math.abs(this.velY) < 0.005) {
             this.velY = 0.0;
         }
-        // move based on seconds
-        this.x -= this.velX * seconds;
-        this.y -= this.velY * seconds;
+        this.turnRight();
+        this.turnLeft();
+        this.x -= this.velX;
+        this.y -= this.velY;
     }
 
     turnLeft() {

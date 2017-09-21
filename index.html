@@ -28,5 +28,10 @@
     <script src="entities/enemy.js"></script>
     <script src="entities/player.js"></script>
     <script src="game/game.js"></script>
+    <script>
+      var game = new Game();
+      game.addShip(250, 50, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0)], true);
+      // game.addShip(150, 150, [new ShipImage(), new GunImage(-24, 0, 0), new GunImage(24, 0, 0.0548)], false);
+    </script>
   </body>
 </html>

@@ -8,8 +8,13 @@ class Camera {
         this.height = canvas.height = 504;
         // scale based on window size
         this.scale = (this.width + this.height) / 1200;
-        this.x = this.entity.getX() || (this.level.getWidth() / 2);
-        this.y = this.entity.getY() || (this.level.getHeight() / 2);
+        if (entity) {
+            this.x = this.entity.getX();
+            this.y = this.entity.getY();
+        } else {
+            this.x = (this.level.getWidth() / 2);
+            this.y = (this.level.getHeight() / 2);
+        }
         this.screenShake = false;
         this.screenShakeFrame = 0;
         this.screenShakeRadius = 10;
@@ -45,8 +50,13 @@ class Camera {
 
     update(seconds) {
         //defaults
-        this.x = this.entity.getX();
-        this.y = this.entity.getY();
+        if (this.entity) {
+            this.x = this.entity.getX();
+            this.y = this.entity.getY();
+        } else {
+            this.x = (this.level.getWidth() / 2);
+            this.y = (this.level.getHeight() / 2);
+        }
         // reset x if outside of bounds 
         if (this.x - (this.width / 2) <= 0) {
             this.x = (this.width / 2);

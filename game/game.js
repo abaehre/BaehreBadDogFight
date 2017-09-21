@@ -19,15 +19,12 @@ class Game {
 
         this.level = new Level(this, 1000, 692);
 
-        this.player = new Player(this.level, 250, 50, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0)]);
-        this.enemy = new Enemy(this.level, 150, 150, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0), new GunImage(24, 0, 0.0548)], this.entities);
+        //this.player = new Player(this.level, 250, 50, [new ShipImage(), new RocketImage(24, 0, 0), new RocketImage(-24, 0, 0.0548), new RocketImage(0, -24, 0.0274)]);
+        //this.enemy = new Enemy(this.level, 150, 150, [new ShipImage(), new RocketImage(24, 0, 0), new GunImage(-24, 0, 0), new GunImage(24, 0, 0.0548)]);
 
-        this.entities.push(this.player);
-        this.entities.push(this.enemy);
+        this.camera = new Camera(null, this.canvas, this.level);
+        this.starBackground = new StarBackground(400, this.level, 0, 0, []);
 
-        this.starBackground = new StarBackground(400, this.level);
-
-        this.camera = new Camera(this.player, this.canvas, this.level);
         // pass to player
         this.keys = new Keys();
         window.addEventListener("keydown", this.keyDown.bind(this), false);
@@ -50,14 +47,13 @@ class Game {
             this.seconds = this.seconds - this.step;
             this.update(this.step);
         }
-        this.frames += 1;
+        //this.frames += 1;
         this.draw(this.seconds);
-        if (Date.now() - this.fpsTimer > 1000)
-        {
+        /*if (Date.now() - this.fpsTimer > 1000) {
             this.fpsTimer += 1000;
             this.fpsMeter.innerHTML = this.frames;
             this.frames = 0;
-        }
+        }*/
         this.lastTime = time;
         requestAnimationFrame(this.loop.bind(this));
     }
@@ -106,6 +102,29 @@ class Game {
     addProjectile(entity, x, y, angle) {
         this.entities.push(new Projectile(entity, this.level, x, y, angle));
     }
-};
 
-var game = new Game();
+    addShip(x, y, shipArr, isPlayer) {
+        if (isPlayer) {
+            this.entities.push(new Player(this.level, x, y, shipArr));
+            this.camera.setEntity(this.entities[this.entities.length - 1]);
+        } else {
+            this.entities.push(new Enemy(this.level, x, y, shipArr));
+        }
+    }
+    // this.player = new Player(this.level, 250, 50, [new ShipImage(), new RocketImage(24, 0, 0), new RocketImage(-24, 0, 0.0548), new RocketImage(0, -24, 0.0274)]);
+    //{"name": "ship", "x": 0, "y": 0, "angle": 0.0, "image": this.shipImage, "halfSize": 24}
+    parseGUIData(shipArr) {
+        var tempArr = [];
+        for (var i = 0; i < shipArr.length; i++) {
+            var part = shipArr[i];
+            if (part.name === 'ship') {
+                tempArr.push(new ShipImage());
+            } else if (part.name === 'rocket') {
+                tempArr.push(new RocketImage(Math.floor(part.x / 3.0), Math.floor(part.y / 3.0), part.angle));
+            } else if (part.name === 'gun') {
+                tempArr.push(new GunImage(Math.floor(part.x / 3.0), Math.floor(part.y / 3.0), part.angle));
+            }
+        }
+        return tempArr;
+    }
+};

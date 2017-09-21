@@ -1,7 +1,7 @@
 class GunImage extends ParentImage {
     constructor(x, y, angle) {
         super(x, y, angle, "SpriteSheets/gun/gunImage.png");
-        this.frames = [{x:0,y:0},{x:0,y:32},{x:0,y:64},{x:0,y:96}];
+        this.frames = [{x:0,y:0},{x:0,y:16},{x:0,y:32},{x:0,y:48}];
         this.reloading = false;
     }
 
@@ -35,7 +35,7 @@ class GunImage extends ParentImage {
         }
         ctx.translate(this.x , this.y);
         ctx.rotate(this.angle * (180 / Math.PI));
-        ctx.drawImage(this.image, start.x, start.y, 32, 32, -16, -16, 32, 32);
+        ctx.drawImage(this.image, start.x, start.y, 16, 16, -8, -8, 16, 16);
         ctx.rotate(-this.angle * (180 / Math.PI)); 
         ctx.translate(-this.x, -this.y);
     }

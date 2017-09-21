@@ -1,9 +1,9 @@
 class Enemy extends Ship {
-    constructor(level, x, y, imageArr, entities) {
+    constructor(level, x, y, imageArr) {
         super(level, x, y, imageArr);
         this.closest = null;
         this.shoot = false;
-        this.entities = entities;
+        this.entities = [];
         this.pressed = {"up": false, "down": false, "right": false, "left": false, "shoot": false};
         this.gunClosestAngle = null;
     }
