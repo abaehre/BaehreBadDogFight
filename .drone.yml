@@ -1,0 +1,5 @@
+pipeline:
+  install:
+    image: alpine
+    commands:
+      - sleep 1m
