@@ -1,6 +1,6 @@
 class Ship extends Entity {
     constructor(level, x, y, imageArr) {
-        super(level, x, y, 48, 0.0174);
+        super(level, x, y, 48, 90);
         this.imageArr = imageArr;
         this.thrustIncrement = 0.1;
         this.maxForwardThrust = 4.0;
@@ -45,10 +45,10 @@ class Ship extends Entity {
             this.remove();
         }
         // basically the radians can be anywhere between -.548 and .548 so a full circle is .548 * 2 or .1096
-        if (Math.abs(this.angle) >= 0.1096) {
+        if (Math.abs(this.angle) >= 360) {
             this.angle = 0;
         }
-        var radians = this.angle * (180 / Math.PI);
+        var radians = this.angle * (Math.PI / 180);
         if (pressed.up) {
             if (this.forwardThrust < this.maxForwardThrust) {
                 this.forwardThrust += this.thrustIncrement;
@@ -102,6 +102,7 @@ class Ship extends Entity {
                 this.turnRightSpeed = 0.0;
             }
         }
+        console.log("ANGLE: " + this.angle);
         if (this.clip === 0 || (pressed.reload && this.clip !== 10) || this.reloading) {
             if (this.reloading === false) {
                 for (var i = 0; i < this.imageArr.length; i++) {

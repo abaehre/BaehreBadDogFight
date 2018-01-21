@@ -9,7 +9,9 @@ class Entity {
         this.removed = false;
         this.level = level;
         // start looking right
+        console.log("ENTITY ANGLE: " + angle);
         this.angle = angle || 0.0;
+        console.log("THIS ANGLE: " + this.angle);
     }
 
     getX() {
